@@ -1,11 +1,15 @@
 package com.example.takahiro_tsuno.rssreader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +23,31 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         List<String> items = new ArrayList<String>();
-        items.add("unko");
-        items.add("oshikko");
+        items.add("うんこ");
+        items.add("おしっこ");
 
         ListView listView = (ListView) findViewById(R.id.list_main);
 
         // 読み込み処理
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.content, R.id.content_string, items);
         listView.setAdapter(arrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                ListView listView = (ListView) parent;
+                // クリックされたアイテムを取得します
+                String item = (String) listView.getItemAtPosition(position);
+
+                // ContentActivityに飛びます
+                Intent intent = new Intent(MainActivity.this, ContentActivity.class);
+                intent.putExtra("word", item);
+                startActivity(intent);
+
+                // アイテムをToastで表示します
+                //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
