@@ -1,6 +1,7 @@
 package com.example.takahiro_tsuno.rssreader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,43 +10,55 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends Activity {
+
+    public class RssLoadTask extends RssApiLoadTask{
+        public RssLoadTask(Context context){
+            super(context);
+        }
+
+        @Override
+        protected void onPostExecute(RssContentList result) {
+            System.out.print(result);
+            super.onPostExecute(result);
+
+            if(result != null){
+
+
+                ListView listView = (ListView) findViewById(R.id.list_main);
+
+                // 読み込み処理
+                ContentAdapter contentAdapter = new ContentAdapter(MainActivity.this, result.rssContentList);
+                listView.setAdapter(contentAdapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                        ListView listView = (ListView) parent;
+                        // クリックされたアイテムを取得します
+                        RssContent rssContent = (RssContent) listView.getItemAtPosition(position);
+
+                        // ContentActivityに飛びます
+                        Intent intent = new Intent(MainActivity.this, ContentActivity.class);
+                        intent.putExtra("rss_content", rssContent);
+                        startActivity(intent);
+
+                        // アイテムをToastで表示します
+                        //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<Content> items = new ArrayList<>();
-        items.add(new Content("yahoo", "http://www.yahoo.co.jp"));
-        items.add(new Content("google", "http://www.google.com"));
-
-        ListView listView = (ListView) findViewById(R.id.list_main);
-
-        // 読み込み処理
-        ContentAdapter contentAdapter = new ContentAdapter(this, items);
-        listView.setAdapter(contentAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                ListView listView = (ListView) parent;
-                // クリックされたアイテムを取得します
-                Content item = (Content) listView.getItemAtPosition(position);
-
-                // ContentActivityに飛びます
-                Intent intent = new Intent(MainActivity.this, ContentActivity.class);
-                intent.putExtra("content", item);
-                startActivity(intent);
-
-                // アイテムをToastで表示します
-                //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
-            }
-        });
+        new RssLoadTask(this).execute();
     }
 
 

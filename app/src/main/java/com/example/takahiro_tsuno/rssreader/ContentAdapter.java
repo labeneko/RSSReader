@@ -10,20 +10,20 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class ContentAdapter extends ArrayAdapter<Content> {
+public class ContentAdapter extends ArrayAdapter<RssContent> {
 
     private final Context context;
-    public List<Content> contentList;
+    public List<RssContent> rssContentList;
 
-    public ContentAdapter(Context context, List<Content> contentList){
-        super(context, 0, contentList);
+    public ContentAdapter(Context context, List<RssContent> rssContentList){
+        super(context, 0, rssContentList);
         this.context = context;
-        this.contentList = contentList;
+        this.rssContentList = rssContentList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Content content = getItem(position);
+        RssContent content = getItem(position);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.main_content_row, parent, false);

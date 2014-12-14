@@ -16,10 +16,10 @@ public class ContentActivity extends Activity {
         setContentView(R.layout.content);
 
         Intent intent = getIntent();
-        Content content = (Content) intent.getExtras().get("content");
+        RssContent rssContent = (RssContent) intent.getExtras().get("rss_content");
 
         TextView textView = (TextView) findViewById(R.id.content_string);
-        textView.setText(content.title);
+        textView.setText(rssContent.title);
 
         WebView webView = (WebView) findViewById(R.id.content_website);
         webView.setWebViewClient(new WebViewClient(){
@@ -31,6 +31,6 @@ public class ContentActivity extends Activity {
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(content.url);
+        webView.loadUrl(rssContent.url);
     }
 }
