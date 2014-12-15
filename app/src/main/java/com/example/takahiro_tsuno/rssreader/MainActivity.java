@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(RssContentList result) {
-            System.out.print(result);
             super.onPostExecute(result);
 
             if(result != null){
@@ -43,6 +42,9 @@ public class MainActivity extends Activity {
                         Intent intent = new Intent(MainActivity.this, ContentActivity.class);
                         intent.putExtra("rss_content", rssContent);
                         startActivity(intent);
+
+                        // 右側に遷移するアニメーション
+                        overridePendingTransition(R.anim.left_leave, R.anim.left_enter);
 
                         // アイテムをToastで表示します
                         //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
