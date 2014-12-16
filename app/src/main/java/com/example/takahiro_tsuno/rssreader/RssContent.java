@@ -6,13 +6,15 @@ import android.os.Parcelable;
 public class RssContent implements Parcelable {
     public String title;
     public String url;
+    public String description;
 
     public RssContent(){
     }
 
-    public RssContent(String _title, String _url){
+    public RssContent(String _title, String _url, String _description){
         title = _title;
         url = _url;
+        description = _description;
     }
 
     public void setTitle(String _title){
@@ -21,6 +23,10 @@ public class RssContent implements Parcelable {
 
     public void setUrl(String _url){
         url = _url;
+    }
+
+    public void setDescription(String _description){
+        description = _description;
     }
 
     // ---------------------------------------------------------------------
@@ -42,6 +48,7 @@ public class RssContent implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(url);
+        dest.writeString(description);
     }
 
     // CREATORは定義が必須のフィールドだが、コンパイルエラーにならない為これが原因でエラーになることが多い

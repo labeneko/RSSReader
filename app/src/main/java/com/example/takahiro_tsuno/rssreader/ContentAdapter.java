@@ -27,9 +27,10 @@ public class ContentAdapter extends ArrayAdapter<RssContent> {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.main_content_row, parent, false);
-        TextView textView = (TextView) contentView.findViewById(R.id.main_content_row_string);
-        textView.setText(content.title);
-
+        TextView titleView = (TextView) contentView.findViewById(R.id.main_content_row_title);
+        titleView.setText(content.title);
+        TextView descriptionView = (TextView) contentView.findViewById(R.id.main_content_row_description);
+        descriptionView.setText(content.description);
         return contentView;
     }
 }

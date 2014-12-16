@@ -9,9 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 
 public class MainActivity extends Activity {
+
+    private ProgressBar progressBar;
 
     public class RssLoadTask extends RssApiLoadTask{
         public RssLoadTask(Context context){
@@ -19,8 +22,15 @@ public class MainActivity extends Activity {
         }
 
         @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected void onPostExecute(RssContentList result) {
             super.onPostExecute(result);
+            progressBar.setVisibility(View.GONE);
 
             if(result != null){
 
@@ -43,9 +53,6 @@ public class MainActivity extends Activity {
                         intent.putExtra("rss_content", rssContent);
                         startActivity(intent);
 
-                        // 右側に遷移するアニメーション
-                        overridePendingTransition(R.anim.left_leave, R.anim.left_enter);
-
                         // アイテムをToastで表示します
                         //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
                     }
@@ -59,6 +66,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         new RssLoadTask(this).execute();
     }
@@ -79,8 +88,15 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case R.id.action_settings:
+                return true;
+
+            case R.id.action_reload:
+                progressBar.setVisibility(View.VISIBLE);
+                ListView listView = (ListView) findViewById(R.id.list_main);
+                listView.setAdapter(null);
+                new RssLoadTask(this).execute();
         }
 
         return super.onOptionsItemSelected(item);

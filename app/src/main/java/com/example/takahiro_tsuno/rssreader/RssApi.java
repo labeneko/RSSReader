@@ -66,6 +66,8 @@ public class RssApi {
                                     rssContent.setTitle(text);
                                 } else if (tag.equals("link")) {
                                     rssContent.setUrl(text);
+                                } else if (tag.equals("description")) {
+                                    rssContent.setDescription(text.replaceAll("<.+?>", ""));
                                 }
                             }
                         }
