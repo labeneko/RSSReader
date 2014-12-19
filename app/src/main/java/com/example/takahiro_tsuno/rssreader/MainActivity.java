@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ProgressBar;
 public class MainActivity extends Activity {
 
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public class RssLoadTask extends RssApiLoadTask{
         public RssLoadTask(Context context){
@@ -31,6 +33,7 @@ public class MainActivity extends Activity {
         protected void onPostExecute(RssContentList result) {
             super.onPostExecute(result);
             progressBar.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
 
             if(result != null){
 
@@ -69,6 +72,16 @@ public class MainActivity extends Activity {
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+
+        // リフレッシュ時の処理を書く
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                rssContentListRefresh();
+            }
+        });
+
         new RssLoadTask(this).execute();
     }
 
@@ -93,12 +106,16 @@ public class MainActivity extends Activity {
                 return true;
 
             case R.id.action_reload:
-                progressBar.setVisibility(View.VISIBLE);
-                ListView listView = (ListView) findViewById(R.id.list_main);
-                listView.setAdapter(null);
-                new RssLoadTask(this).execute();
+                rssContentListRefresh();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void rssContentListRefresh(){
+        progressBar.setVisibility(View.VISIBLE);
+        ListView listView = (ListView) findViewById(R.id.list_main);
+        listView.setAdapter(null);
+        new RssLoadTask(this).execute();
     }
 }

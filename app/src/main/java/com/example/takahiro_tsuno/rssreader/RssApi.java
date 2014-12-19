@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RssApi {
@@ -23,7 +24,13 @@ public class RssApi {
 
         List<RssContent> rssContentList = new ArrayList<RssContent>();
 
-        HttpGet httpGet = new HttpGet("http://rss.rssad.jp/rss/itmenterprise/2.0/enterprise.xml");
+        List<String> urlList = new ArrayList<String>();
+        urlList.add("http://rss.rssad.jp/rss/itmnews/2.0/news_venture.xml");
+        urlList.add("http://rss.rssad.jp/rss/itmenterprise/2.0/enterprise.xml");
+        urlList.add("http://rss.rssad.jp/rss/itmnews/2.0/news_web20.xml");
+
+        Collections.shuffle(urlList);
+        HttpGet httpGet = new HttpGet(urlList.get(0));
 
         // USER AGENTあとで調べる
         AndroidHttpClient client = AndroidHttpClient.newInstance("RSS sample", context);
