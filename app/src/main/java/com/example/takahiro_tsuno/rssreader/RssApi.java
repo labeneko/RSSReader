@@ -4,9 +4,11 @@ package com.example.takahiro_tsuno.rssreader;
 import android.content.Context;
 import android.net.http.AndroidHttpClient;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -35,22 +37,17 @@ public class RssApi {
         // USER AGENTあとで調べる
         AndroidHttpClient client = AndroidHttpClient.newInstance("RSS sample", context);
 
-        StringBuilder stringBuilder = new StringBuilder();
         try{
             HttpResponse response = client.execute(httpGet);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-            String line = null;
-            while((line = bufferedReader.readLine()) != null){
-                stringBuilder.append(line);
-            }
+            HttpEntity httpEntity = response.getEntity();
+            String stringContent = EntityUtils.toString(httpEntity, "UTF-8");
 
             // ここから先、XMLのパースをしている
             XmlPullParserFactory xmlPullParserFactory = XmlPullParserFactory.newInstance();
             xmlPullParserFactory.setNamespaceAware(true); //?
 
             XmlPullParser xmlPullParser = xmlPullParserFactory.newPullParser();
-            xmlPullParser.setInput(new StringReader(stringBuilder.toString()));
+            xmlPullParser.setInput(new StringReader(stringContent));
 
             RssContent rssContent = null;
             String tag = null;

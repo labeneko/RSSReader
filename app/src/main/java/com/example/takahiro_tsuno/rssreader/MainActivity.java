@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
 
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ContentAdapter contentAdapter;
 
     public class RssLoadTask extends RssApiLoadTask{
         public RssLoadTask(Context context){
@@ -36,30 +37,7 @@ public class MainActivity extends Activity {
             swipeRefreshLayout.setRefreshing(false);
 
             if(result != null){
-
-
-                ListView listView = (ListView) findViewById(R.id.list_main);
-
-                // 読み込み処理
-                ContentAdapter contentAdapter = new ContentAdapter(MainActivity.this, result.rssContentList);
-                listView.setAdapter(contentAdapter);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                        ListView listView = (ListView) parent;
-                        // クリックされたアイテムを取得します
-                        RssContent rssContent = (RssContent) listView.getItemAtPosition(position);
-
-                        // ContentActivityに飛びます
-                        Intent intent = new Intent(MainActivity.this, ContentActivity.class);
-                        intent.putExtra("rss_content", rssContent);
-                        startActivity(intent);
-
-                        // アイテムをToastで表示します
-                        //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
-                    }
-                });
+                contentAdapter.addAll(result.rssContentList);
             }
         }
 
@@ -82,7 +60,28 @@ public class MainActivity extends Activity {
             }
         });
 
-        new RssLoadTask(this).execute();
+        final ListView listView = (ListView) findViewById(R.id.list_main);
+
+
+        // 読み込み処理
+        contentAdapter = new ContentAdapter(MainActivity.this);
+        listView.setAdapter(contentAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // クリックされたアイテムを取得します
+                RssContent rssContent = contentAdapter.getItem(position);
+
+                // ContentActivityに飛びます
+                ContentActivity.startActivity(MainActivity.this, rssContent);
+
+                // アイテムをToastで表示します
+                //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        rssContentListRefresh();
     }
 
 
@@ -114,8 +113,7 @@ public class MainActivity extends Activity {
 
     public void rssContentListRefresh(){
         progressBar.setVisibility(View.VISIBLE);
-        ListView listView = (ListView) findViewById(R.id.list_main);
-        listView.setAdapter(null);
+        contentAdapter.clear();
         new RssLoadTask(this).execute();
     }
 }

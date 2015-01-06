@@ -10,4 +10,8 @@ public class RssContentList {
     public RssContentList(List<RssContent> _rssContentList){
         rssContentList = _rssContentList;
     }
+
+    public List<RssContent> getRssContentList() {
+        return rssContentList;
+    }
 }

@@ -33,4 +33,8 @@ public class RssApiLoadTask extends AsyncTask<String, Void, RssContentList> {
         }
         return  null;
     }
+
+    public Exception getException() {
+        return exception;
+    }
 }

@@ -2,10 +2,10 @@ package com.example.takahiro_tsuno.rssreader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -15,17 +15,24 @@ import android.widget.ProgressBar;
 
 public class ContentActivity extends Activity {
 
+    private static final String EXTRA_KEY_CONTENT = "extra_key_content";
+
     private ProgressBar progressBar;
+
+    public static void startActivity(Context context, RssContent rssContent){
+        Intent intent = new Intent(context, ContentActivity.class);
+        intent.putExtra(EXTRA_KEY_CONTENT, rssContent);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content);
+        setContentView(R.layout.activity_content);
 
         progressBar = (ProgressBar) findViewById(R.id.content_progress_bar);
 
-        Intent intent = getIntent();
-        RssContent rssContent = (RssContent) intent.getExtras().get("rss_content");
+        RssContent rssContent = getIntent().getParcelableExtra(EXTRA_KEY_CONTENT);
 
         ActionBar actionBar = getActionBar();
         actionBar.setTitle(rssContent.title);

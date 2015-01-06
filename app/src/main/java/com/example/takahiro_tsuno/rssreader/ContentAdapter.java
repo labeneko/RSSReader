@@ -15,18 +15,20 @@ public class ContentAdapter extends ArrayAdapter<RssContent> {
     private final Context context;
     public List<RssContent> rssContentList;
 
-    public ContentAdapter(Context context, List<RssContent> rssContentList){
-        super(context, 0, rssContentList);
+    public ContentAdapter(Context context){
+        super(context, 0);
         this.context = context;
-        this.rssContentList = rssContentList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         RssContent content = getItem(position);
+        View contentView = convertView;
+        if(contentView == null){
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            contentView = inflater.inflate(R.layout.adapter_content, parent, false);
+        }
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.main_content_row, parent, false);
         TextView titleView = (TextView) contentView.findViewById(R.id.main_content_row_title);
         titleView.setText(content.title);
         TextView descriptionView = (TextView) contentView.findViewById(R.id.main_content_row_description);
