@@ -2,7 +2,6 @@ package com.example.takahiro_tsuno.rssreader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
@@ -11,6 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
+import com.example.takahiro_tsuno.rssreader.RssFeed.Item;
+import com.example.takahiro_tsuno.rssreader.RssFeed.Rss;
 
 
 public class MainActivity extends Activity {
@@ -31,13 +33,13 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(RssContentList result) {
+        protected void onPostExecute(Rss result) {
             super.onPostExecute(result);
             progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
 
             if(result != null){
-                contentAdapter.addAll(result.rssContentList);
+                contentAdapter.addAll(result.channel.itemList);
             }
         }
 
@@ -71,10 +73,10 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // クリックされたアイテムを取得します
-                RssContent rssContent = contentAdapter.getItem(position);
+                Item item = contentAdapter.getItem(position);
 
                 // ContentActivityに飛びます
-                ContentActivity.startActivity(MainActivity.this, rssContent);
+                ContentActivity.startActivity(MainActivity.this, item);
 
                 // アイテムをToastで表示します
                 //Toast.makeText(MainActivity.this, item, Toast.LENGTH_LONG).show();

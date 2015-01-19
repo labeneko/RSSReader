@@ -3,12 +3,13 @@ package com.example.takahiro_tsuno.rssreader;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.takahiro_tsuno.rssreader.RssFeed.Rss;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.util.List;
 
-public class RssApiLoadTask extends AsyncTask<String, Void, RssContentList> {
+public class RssApiLoadTask extends AsyncTask<String, Void, Rss> {
     private final Context context;
     Exception exception;
 
@@ -22,10 +23,10 @@ public class RssApiLoadTask extends AsyncTask<String, Void, RssContentList> {
      * 呼び方はdoInBackground(param1,param2,param3 ...)
      */
     @Override
-    protected RssContentList doInBackground(String... params){
+    protected Rss doInBackground(String... params){
         try{
-            List<RssContent> rssContentList = RssApi.getRss(context);
-            return new RssContentList(rssContentList);
+            Rss rss = RssApi.getRss(context);
+            return rss;
         } catch (XmlPullParserException e){
             exception = e;
         } catch (IOException e){

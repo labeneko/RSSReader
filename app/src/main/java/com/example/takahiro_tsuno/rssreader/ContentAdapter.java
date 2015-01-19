@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.takahiro_tsuno.rssreader.RssFeed.Item;
+
 import java.util.List;
 
-public class ContentAdapter extends ArrayAdapter<RssContent> {
+public class ContentAdapter extends ArrayAdapter<Item> {
 
     private final Context context;
-    public List<RssContent> rssContentList;
+    public List<Item> rssContentList;
 
     public ContentAdapter(Context context){
         super(context, 0);
@@ -22,7 +24,7 @@ public class ContentAdapter extends ArrayAdapter<RssContent> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        RssContent content = getItem(position);
+        Item content = getItem(position);
         View contentView = convertView;
         if(contentView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

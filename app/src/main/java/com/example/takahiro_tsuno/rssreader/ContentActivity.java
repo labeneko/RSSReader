@@ -12,6 +12,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.example.takahiro_tsuno.rssreader.RssFeed.Item;
+
 
 public class ContentActivity extends Activity {
 
@@ -19,9 +21,9 @@ public class ContentActivity extends Activity {
 
     private ProgressBar progressBar;
 
-    public static void startActivity(Context context, RssContent rssContent){
+    public static void startActivity(Context context, Item item){
         Intent intent = new Intent(context, ContentActivity.class);
-        intent.putExtra(EXTRA_KEY_CONTENT, rssContent);
+        intent.putExtra(EXTRA_KEY_CONTENT, item);
         context.startActivity(intent);
     }
 
@@ -32,10 +34,10 @@ public class ContentActivity extends Activity {
 
         progressBar = (ProgressBar) findViewById(R.id.content_progress_bar);
 
-        RssContent rssContent = getIntent().getParcelableExtra(EXTRA_KEY_CONTENT);
+        Item item = (Item) getIntent().getSerializableExtra(EXTRA_KEY_CONTENT);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setTitle(rssContent.title);
+        actionBar.setTitle(item.title);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         WebView webView = (WebView) findViewById(R.id.content_website);
@@ -48,7 +50,7 @@ public class ContentActivity extends Activity {
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(rssContent.url);
+        webView.loadUrl(item.link);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
